@@ -1,0 +1,37 @@
+class Grafo:
+    def __init__(self,n):
+      self.n = n
+      self.grafo = [[0] * self.n for i in range(self.n)]
+
+
+    def insereAresta(self,u,v):
+      self.grafo[u-1] [v-1] = 1
+      self.grafo[v-1] [u-1] = 1
+
+    def imprimeGrafo(self):
+      print("Matriz de Adjacências")
+      for i in range(self.n):
+          print(self.grafo[i])
+
+#Questão 1, Letra A
+    def somaGraus(self):
+        soma = 0
+        for linha in self.grafo:
+            soma += sum(linha)
+        return soma
+
+#Questão 1, Letra B  
+    def identificaGrafoNulo(self):
+        return all(not any(linha) for linha in self.grafo)
+
+g= Grafo(4)
+g.insereAresta(1,2)
+g.imprimeGrafo()
+
+soma_graus = g.somaGraus()
+print("Soma dos graus dos vértices:", soma_graus)
+
+if g.identificaGrafoNulo():
+  print("O grafo é nulo.")
+else:
+  print("O grafo não é nulo.")
