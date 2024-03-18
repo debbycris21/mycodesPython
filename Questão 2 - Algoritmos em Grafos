@@ -1,0 +1,22 @@
+def cria_grafo(lista_vertices, lista_arestas):
+    grafo = {}
+    for vertice in lista_vertices:
+        grafo[vertice] = []
+
+    for aresta in lista_arestas:
+       grafo[aresta[0]].append(aresta[1])
+    return grafo
+
+#Questão 2 Letra A
+def vertice_grau_maximo(grafo):
+    return max(grafo, key=lambda vertice: len(grafo[vertice]))
+
+
+lista_vertices = ['a', 'b', 'c', 'd', 'e']
+lista_arestas = [('a', 'b'), ('b', 'a'), ('b', 'c'), ('c', 'b'), ('c', 'e'), ('e', 'c'), ('c', 'a'), ('a', 'c'), ('b', 'd'), ('d', 'b'), ('d', 'c'), ('c', 'd'), ('d', 'e'), ('e', 'd')]
+
+grafo = cria_grafo(lista_vertices, lista_arestas)
+print(grafo)
+
+vertice_max = vertice_grau_maximo(grafo)
+print("Vértice de grau máximo:", vertice_max)
