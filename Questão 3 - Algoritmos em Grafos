@@ -1,0 +1,25 @@
+class Grafo:
+  def __init__(self, vertices, arestas):
+      self.vertices = vertices
+      self.arestas = arestas
+      self.num_vertices = len(vertices)
+      self.num_arestas = len(arestas)
+      self.matriz_incidencia = self.gerar_matriz_incidencia()
+
+  def gerar_matriz_incidencia(self):
+      matriz_incidencia = [[0] * self.num_arestas for _ in range(self.num_vertices)]
+      for i, v in enumerate(self.vertices):
+          for j, a in enumerate(self.arestas):
+              if v in a:
+                  matriz_incidencia[i][j] = 1 if v == a[0] else 1
+      return matriz_incidencia
+
+  def imprimir_matriz_incidencia(self):
+      for row in self.matriz_incidencia:
+          print(row)
+
+
+vertices = ['A', 'B', 'C', 'D']
+arestas = [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A')]
+grafo = Grafo(vertices, arestas)
+grafo.imprimir_matriz_incidencia()
