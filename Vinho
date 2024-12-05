@@ -1,0 +1,107 @@
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+from sklearn.svm import SVC
+
+# Função para calcular a precisão do modelo
+def print_performance(clf, X, y):
+    y_prediction = clf.predict(X)
+    accuracy = accuracy_score(y, y_prediction)
+    print("Acurácia do modelo:", accuracy)
+
+# Função para visualizar a árvore de decisão
+def plot_decision_tree(clf, feature_names, class_names):
+    plt.figure(figsize=(12, 6))
+    plot_tree(clf, feature_names=feature_names, class_names=class_names, filled=True)
+    plt.show()
+    # Pausa para o usuário visualizar a árvore antes de continuar
+    plt.pause(0.1)  # Ajuste o valor conforme necessário
+
+# Função para prever a origem do vinho com base nas características fornecidas pelo usuário
+def predict_wine_origin(clf, feature_names):
+    dados = {}
+    for feature in feature_names:
+        valor = input(f"Informe o valor para {feature}: ")
+        dados[feature] = float(valor)
+    dados_df = pd.DataFrame([dados], columns=feature_names)
+    prediction = clf.predict(dados_df)
+    print("A previsão para a origem do vinho é:", prediction[0])
+
+# Função para calcular a precisão do modelo SVM
+def print_performance_svm(clf, X, y):
+    y_prediction = clf.predict(X)
+    accuracy = accuracy_score(y, y_prediction)
+    print("Acurácia do modelo SVM:", accuracy)
+
+def main():
+    # Carregar os dados do arquivo CSV
+    df = pd.read_csv("wine.csv")
+
+    # Renomear as colunas para nomes relacionados ao tema
+    df.rename(columns={
+        'Alcohol': 'Álcool', 'Malicacid': 'Ácido_Málico', 'Ash': 'Cinza', 'Alcalinity_of_ash': 'Alcalinidade_da_Cinza',
+        'Magnesium': 'Magnésio', 'Total_phenols': 'Fenóis_Totais', 'Flavanoids': 'Flavonóides', 'Nonflavanoid_phenols': 'Fenóis_Não_Flavonóides',
+        'Proanthocyanins': 'Proantocianinas', 'Color_intensity': 'Intensidade_da_Cor', 'Hue': 'Matiz',
+        '0D280_0D315_of_diluted_wines': 'OD280/OD315_de_Vinhos_Diluídos', 'Proline': 'Prolina'
+    }, inplace=True)
+
+    # Selecionar as colunas renomeadas
+    colunas = [
+        'Álcool', 'Ácido_Málico', 'Cinza', 'Alcalinidade_da_Cinza', 'Magnésio',
+        'Fenóis_Totais', 'Flavonóides', 'Fenóis_Não_Flavonóides', 'Proantocianinas',
+        'Intensidade_da_Cor', 'Matiz', 'OD280/OD315_de_Vinhos_Diluídos', 'Prolina'
+    ]
+
+    # Separar características (features) e alvo (target)
+    X = df[colunas]
+    y = df["class"]  # Coluna de destino
+
+    # Dividir os dados em conjuntos de treinamento e teste
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+
+    # Criar um classificador de árvore de decisão
+    clf = DecisionTreeClassifier()
+
+    # Treinar o modelo
+    clf.fit(X_train, y_train)
+
+    # Criar um classificador SVM
+    clf_svm = SVC()
+
+    # Treinar o modelo SVM
+    clf_svm.fit(X_train, y_train)
+
+    # Converter as classes para strings para evitar o TypeError
+    class_names = [str(cls) for cls in df["class"].unique()]
+
+    # Dando as opções para o usuário através de uma estrutura de repetição
+    while True:
+        print("Escolha uma opção:")
+        print("1 - Ver desempenho do modelo de árvore de decisão")
+        print("2 - Ver árvore de decisão")
+        print("3 - Prever origem do vinho")
+        print("4 - Ver desempenho do modelo SVM")
+        print("5 - Encerrar programa")
+
+        option = input("Opção: ")
+
+        # Usando if, elif e else para dar as opções no programa
+        if option == '1':
+            print_performance(clf, X_test, y_test)
+        elif option == '2':
+            plot_decision_tree(clf, feature_names=colunas, class_names=class_names)
+        elif option == '3':
+            predict_wine_origin(clf, feature_names=colunas)
+        elif option == '4':
+            print_performance_svm(clf_svm, X_test, y_test)
+        elif option == '5':
+            print("Encerrando o programa...")
+            break
+        else:
+            print("Opção inválida. Escolha novamente.")
+
+if __name__ == "__main__":
+    main()
